@@ -79,3 +79,8 @@ Handles merging common service annotations with headless service annotations
 {{- toYaml $allAnnotations -}}
 {{- end -}}
 {{- end -}}
+
+{{- define "nexus.image" -}}
+{{- $image := index .values.global.images .image -}}
+{{- printf "%s/%s:%s" .values.global.registry.address $image.repository $image.tag -}}
+{{- end -}}

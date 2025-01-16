@@ -29,6 +29,9 @@ spec:
       protocol: {{ .Values.service.nexus.protocol }}
       port: {{ .Values.service.nexus.port }}
       targetPort: {{ .Values.service.nexus.targetPort }}
+    {{- if eq .Values.service.nexus.type "NodePort" }}
+      nodePort: {{ .Values.service.nexus.nodePort }}
+    {{- end }}
 {{- end }}
 ---
 {{ if .Values.nexus.docker.enabled -}}
