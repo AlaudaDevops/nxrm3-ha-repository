@@ -1,4 +1,4 @@
-package harbor
+package nexus
 
 import (
 	"os"

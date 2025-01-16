@@ -24,7 +24,7 @@ make test-all
 
 备注：目前 vcluster 所在的集群资源不足，无法运行测试。
 
-### 基于 gitlab operator 的 e2e 测试
+### 基于 nexus operator 的 e2e 测试
 
 前置条件：
 

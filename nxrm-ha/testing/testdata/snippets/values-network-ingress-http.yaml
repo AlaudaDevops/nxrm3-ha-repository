@@ -7,3 +7,4 @@ ingress:
   enabled: true
   host: test-ingress-http.example.com
   defaultRule: true
+
