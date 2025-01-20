@@ -4,7 +4,17 @@ secret:
     existingSecret: "nexus-password"
     secretKey: "password"
   nexusSecret:
-    enabled: false
+    enabled: true
+    secretKeyfile: |
+      {
+        "active": "default",
+        "keys": [
+          {
+            "id": "default",
+            "key": "default-key"
+          }
+        ]
+      }
 
 statefulset:
   container:

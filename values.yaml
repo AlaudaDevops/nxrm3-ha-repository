@@ -1,10 +1,10 @@
 global:
   registry:
-    address: docker-mirrors.alauda.cn
+    address: registry.alauda.cn:60080
   images:
     nexus:
-      repository: sonatype/nexus3
-      tag: 3.76.0
+      repository: devops/sonatype-docker-nexus3
+      tag: 3.76.0-f19614
       support_arm: true
       thirdparty: true
     busybox:
