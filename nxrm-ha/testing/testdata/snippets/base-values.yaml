@@ -1,0 +1,17 @@
+secret:
+  nexusAdminSecret:
+    enabled: true
+    existingSecret: "nexus-password"
+    secretKey: "password"
+  nexusSecret:
+    enabled: false
+
+statefulset:
+  container:
+    resources:
+      requests:
+        cpu: 2
+        memory: "4Gi"
+      limits:
+        cpu: 4
+        memory: "8Gi"

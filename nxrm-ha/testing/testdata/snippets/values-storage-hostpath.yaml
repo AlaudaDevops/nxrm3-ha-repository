@@ -1,0 +1,5 @@
+hostPath: /data/nexus
+
+statefulset:
+  nodeSelector:
+    kubernetes.io/hostname: <node.first>

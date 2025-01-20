@@ -1,8 +1,23 @@
+global:
+  registry:
+    address: docker-mirrors.alauda.cn
+  images:
+    nexus:
+      repository: sonatype/nexus3
+      tag: 3.76.0
+      support_arm: true
+      thirdparty: true
+    busybox:
+      repository: ops/busybox
+      tag: stable
+      support_arm: true
+      thirdparty: true
+
 # Declare variables to be passed into your templates.
 namespaces:
   nexusNs:
-    enabled: true
-    name: "nexusrepo"
+    enabled: false
+    name: ""
   cloudwatchNs:
     enabled: false
     name: amazon-cloudwatch
@@ -37,7 +52,7 @@ statefulset:
   name: nxrm-statefulset
   serviceName: nxrm-statefulset-service
   replicaCount: 3
-  clustered: true
+  clustered: false
   additionalVolumes:
   additionalVolumeMounts:
   additionalContainers:
@@ -61,37 +76,8 @@ statefulset:
 
   # # Add init containers. e.g. to be used to give specific permissions for nexus-data.
   # # Add your own init containers as needed
-  initContainers:
-    # chown nexus-data to 'nexus' user and init log directories/files for a new pod
-    # otherwise the side car containers will crash a couple of times and backoff whilst waiting
-    # for nxrm-app to start and this increases the total start up time.
-    - name: chown-nexusdata-owner-to-nexus-and-init-log-dir
-      image: busybox:1.33.1
-      command: [/bin/sh]
-      args:
-        - -c
-        - >-
-          mkdir -p /nexus-data/etc/logback &&
-          mkdir -p /nexus-data/log/tasks &&
-          mkdir -p /nexus-data/log/audit &&
-          touch -a /nexus-data/log/tasks/allTasks.log &&
-          touch -a /nexus-data/log/audit/audit.log &&
-          touch -a /nexus-data/log/request.log &&
-          chown -R '200:200' /nexus-data
-      volumeMounts:
-        - name: nexus-data
-          mountPath: /nexus-data
-      resources:
-        limits:
-          cpu: "0.2"
-          memory: "512Mi"
-        requests:
-          cpu: "0.1"
-          memory: "256Mi"
+  initContainers: []
   container:
-    image:
-      repository: sonatype/nexus3
-      nexusTag: 3.76.0
     resources:
       # See help documentation, these are minimum system requirements
       requests:
@@ -133,9 +119,6 @@ statefulset:
     #       name: secret-name
     #       key: secret-key
   requestLogContainer:
-    image:
-      repository: busybox
-      tag: 1.33.1
     resources:
       limits:
         cpu: "0.2"
@@ -144,9 +127,6 @@ statefulset:
         cpu: "0.1"
         memory: "256Mi"
   auditLogContainer:
-    image:
-      repository: busybox
-      tag: 1.33.1
     resources:
       limits:
         cpu: "0.2"
@@ -155,9 +135,6 @@ statefulset:
         cpu: "0.1"
         memory: "256Mi"
   taskLogContainer:
-    image:
-      repository: busybox
-      tag: 1.33.1
     resources:
       limits:
         cpu: "0.2"
@@ -239,6 +216,8 @@ pvc:
     enabled: false
   existingClaim: null
 
+hostPath: null
+
 service: # Nexus Repo NodePort Service
   annotations: {}
   nexus:
@@ -247,6 +226,7 @@ service: # Nexus Repo NodePort Service
     protocol: TCP
     port: 80
     targetPort: 8081
+    nodePort: 30000
   headless:
     annotations: {}
     publishNotReadyAddresses: true # We want all pods in the StatefulSet to have their addresses published even before they're ready.
@@ -321,13 +301,15 @@ secret:
   # -- Use an existing secret for the database variables: DB_NAME, DB_HOST, DB_USER, DB_PASSWORD
   existingDbSecret:
     # -- Enabled the use of an already created secret, you need to uncomment the values from additionalEnv
-    enabled: false
+    enabled: true
   nexusAdmin:
     name: "nexusAdminPassword"
     alias: "admin-nxrm-password-alias"
   nexusAdminSecret:
     enabled: false # Enable to apply nexus-admin-secret.yaml which allows you to the initial admin password for nexus repository
     adminPassword: yourinitialnexuspassword #You should change this when you login for the first time
+    existingSecret: null
+    secretKey: "nexus-admin-password"
   license:
     name: nexus-repo-license.lic
     # -- Use an already created secret with the license contents in base64, it takes the name from the above field -> name: nexus-repo-license.lic and the mount path from below: licenseSecret.mountPath
