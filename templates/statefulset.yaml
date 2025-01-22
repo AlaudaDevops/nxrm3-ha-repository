@@ -89,7 +89,29 @@ spec:
               memory: "256Mi"
         {{- if .Values.statefulset.initContainers }}
         {{ toYaml .Values.statefulset.initContainers | nindent 8 }}
-      {{- end }}
+        {{- end }}
+        {{- if .Values.plugins.enabled }}
+        - name: deploy-plugins
+          image: {{ include "nexus.image" (dict "values" .Values "image" "plugins") }}
+          command: [ "/bin/sh" ]
+          args:
+            - -c
+            - >-
+              cp {{ .Values.plugins.path }}/*.jar /nexus-deploy/ &&
+              chown -R 200:200 /nexus-deploy/
+          securityContext:
+            runAsUser: 0
+          volumeMounts:
+            - name: nexus-plugins
+              mountPath: /nexus-deploy
+          resources:
+            limits:
+              cpu: "0.2"
+              memory: "256Mi"
+            requests:
+              cpu: "0.1"
+              memory: "128Mi"
+        {{- end }}
       {{- if .Values.statefulset.nodeSelector }}
       nodeSelector:
         {{ toYaml .Values.statefulset.nodeSelector | nindent 8 }}
@@ -213,6 +235,8 @@ spec:
             {{ toYaml .Values.statefulset.container.additionalEnv | nindent 12 }}
           {{- end }}
           volumeMounts:
+            - name: nexus-plugins
+              mountPath: /opt/sonatype/nexus/deploy
           {{- if or .Values.aws.secretmanager.enabled .Values.azure.keyvault.enabled .Values.secret.dbSecret.enabled .Values.externalsecrets.enabled }}
             - name: nxrm-secrets
               mountPath: /nxrm-secrets
@@ -280,6 +304,8 @@ spec:
           {{ toYaml .Values.statefulset.additionalContainers | nindent 8 }}
         {{- end }}
       volumes:
+        - name: nexus-plugins
+          emptyDir: {}
         - name: initial-password
           secret:
           {{- if .Values.secret.nexusAdminSecret.existingSecret }}
@@ -289,6 +315,9 @@ spec:
                 path: initial-password
           {{- else }}
             secretName: {{ template "nexus.name" . }}-adminsecret
+            items:
+              - key: {{ .Values.secret.nexusAdminSecret.secretKey }}
+                path: initial-password
           {{- end }}
       {{- if .Values.config.enabled }}
         - name: {{ template "nexus.name" . }}-conf

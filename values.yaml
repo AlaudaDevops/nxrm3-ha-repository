@@ -370,3 +370,7 @@ config:
   enabled: false
   mountPath: /sonatype-nexus-conf
   data: null
+
+plugins:
+  enabled: false
+  path: null
