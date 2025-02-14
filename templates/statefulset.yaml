@@ -358,7 +358,7 @@ spec:
         {{- if and (not .Values.secret.aws.nexusSecret.enabled) (not .Values.secret.azure.nexusSecret.enabled) }}
         - name: nexus-secret-volume
           secret:
-            secretName: {{ .Values.secret.nexusSecret.name }}
+            secretName: {{ template "nexus.fullname" . }}
         {{ end }}
       {{ end }}
       {{- if .Values.logStorage.combineTaskLogs }}
