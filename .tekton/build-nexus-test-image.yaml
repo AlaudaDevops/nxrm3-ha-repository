@@ -1,5 +1,25 @@
 apiVersion: tekton.dev/v1
 kind: PipelineRun
+metadata:
+  name: build-nexus-test-image
+  annotations:
+    pipelinesascode.tekton.dev/on-comment: "^/build-multi.*\ nexus-test*"
+    pipelinesascode.tekton.dev/on-cel-expression: |-
+      (
+        "testing/**".pathChanged() ||
+        ".tekton/build-nexus-test-image.yaml".pathChanged()
+      ) && ((
+        event == "push" && (
+          source_branch.matches("^(main|master|release-.*|alauda.*)$") ||
+          target_branch.matches("^(main|master|release-.*|alauda.*)$") ||
+          target_branch.startsWith("refs/tags/")
+        )
+      ) || (
+        event == "pull_request" && (
+          target_branch.matches("^(main|master|release-.*)$")
+        )
+      ))
+    pipelinesascode.tekton.dev/max-keep-runs: "5"
 spec:
   pipelineRef:
     resolver: hub
@@ -67,23 +87,3 @@ spec:
         runAsGroup: 65532
         fsGroup: 65532
         fsGroupChangePolicy: OnRootMismatch
-metadata:
-  name: build-nexus-test-image
-  annotations:
-    pipelinesascode.tekton.dev/on-comment: "^/build-multi.*\ nexus-test*"
-    pipelinesascode.tekton.dev/on-cel-expression: |-
-      (
-        "testing/**".pathChanged() ||
-        ".tekton/build-nexus-test-image.yaml".pathChanged()
-      ) && ((
-        event == "push" && (
-          source_branch.matches("^(main|master|release-.*|alauda.*)$") ||
-          target_branch.matches("^(main|master|release-.*|alauda.*)$") ||
-          target_branch.startsWith("refs/tags/")
-        )
-      ) || (
-        event == "pull_request" && (
-          target_branch.matches("^(main|master|release-.*)$")
-        )
-      ))
-    pipelinesascode.tekton.dev/max-keep-runs: "5"
