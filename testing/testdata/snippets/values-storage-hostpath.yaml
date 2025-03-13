@@ -2,4 +2,4 @@ hostPath: /data/nexus
 
 statefulset:
   nodeSelector:
-    kubernetes.io/hostname: <node.first>
+    kubernetes.io/hostname: <node.name.random>

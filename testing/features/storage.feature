@@ -1,6 +1,6 @@
 # language: zh-CN
 
-@nexus-chart-deploy
+@allure.label.epic:nexus-chart-deploy
 @nexus-chart-deploy-storage
 功能: 支持多种存储类型部署 nexus
 
@@ -47,12 +47,12 @@
       """
     并且 "nexus" 可以正常访问
       """
-      url: http://admin:Nexus12345@<node.first>:<nodeport.http>/service/rest/v1/status/check
+      url: http://admin:Nexus12345@<node.ip.random.readable>:<nodeport.http>/service/rest/v1/status/check
       timeout: 10m
       """
     并且 Pod 资源检查通过
       | name                       | path            | value        |
-      | nexus-hostpath-nxrm-ha-0   | $.status.hostIP | <node.first> |
+      | nexus-hostpath-nxrm-ha-0   | $.status.hostIP | <node.ip.random.readable> |
 
   @automated
   @priority-high
