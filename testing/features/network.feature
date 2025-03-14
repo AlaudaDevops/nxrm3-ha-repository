@@ -1,11 +1,11 @@
 # language: zh-CN
-@nexus-chart-deploy
+@allure.label.epic:nexus-chart-deploy
 @nexus-chart-deploy-network
 功能: 支持多种网络模式部署 nexus
 
   @automated
   @priority-high
-  @nexus-chart-deploy-network-http
+  @allure.label.case_id:nexus-chart-deploy-network-http
   场景: 使用 http 方式部署 nexus
     假定 集群已安装 ingress controller
     并且 已添加域名解析
@@ -30,7 +30,7 @@
 
   @automated
   @priority-high
-  @nexus-chart-deploy-network-https
+  @allure.label.case_id:nexus-chart-deploy-network-https
   场景: 使用 https 方式部署 nexus
     假定 集群已安装 ingress controller
     并且 已添加域名解析
@@ -56,7 +56,7 @@
 
   @automated
   @priority-high
-  @nexus-chart-deploy-network-nodeport
+  @allure.label.case_id:nexus-chart-deploy-network-nodeport
   场景: 使用 nodeport 方式部署 nexus
     假定 命名空间 "nexus-network-nodeport" 已存在
     并且 已导入 "password" 资源: "./testdata/resources/secret-password.yaml"

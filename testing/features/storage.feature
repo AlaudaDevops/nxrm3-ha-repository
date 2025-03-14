@@ -1,13 +1,13 @@
 # language: zh-CN
 
-@nexus-chart-deploy
+@allure.label.epic:nexus-chart-deploy
 @nexus-chart-deploy-storage
 功能: 支持多种存储类型部署 nexus
 
   @smoke
   @automated
   @priority-high
-  @nexus-chart-deploy-storage-sc
+  @allure.label.case_id:nexus-chart-deploy-storage-sc
   场景: 使用存储类方式部署 nexus
     假定 集群已存在存储类
     并且 命名空间 "nexus-storage-sc" 已存在
@@ -32,7 +32,7 @@
 
   @automated
   @priority-high
-  @nexus-chart-deploy-storage-hostpath
+  @allure.label.case_id:nexus-chart-deploy-storage-hostpath
   场景: 使用 hostpath 方式部署 nexus
     假定 命名空间 "nexus-storage-hostpath" 已存在
     并且 已导入 "password" 资源: "./testdata/resources/secret-password.yaml"
@@ -47,16 +47,16 @@
       """
     并且 "nexus" 可以正常访问
       """
-      url: http://admin:Nexus12345@<node.first>:<nodeport.http>/service/rest/v1/status/check
+      url: http://admin:Nexus12345@<node.ip.random.readable>:<nodeport.http>/service/rest/v1/status/check
       timeout: 10m
       """
     并且 Pod 资源检查通过
       | name                       | path            | value        |
-      | nexus-hostpath-nxrm-ha-0   | $.status.hostIP | <node.first> |
+      | nexus-hostpath-nxrm-ha-0   | $.status.hostIP | <node.ip.random.readable> |
 
   @automated
   @priority-high
-  @nexus-chart-deploy-storage-pvc
+  @allure.label.case_id:nexus-chart-deploy-storage-pvc
   场景: 使用指定 pvc 的方式部署 nexus
     假定 命名空间 "nexus-storage-pvc" 已存在
     并且 已导入 "password" 资源: "./testdata/resources/secret-password.yaml"
