@@ -30,28 +30,11 @@ RUN set -eux; \
 
 
 COPY testing /app
-# 安装 playwright
-ENV GOPROXY='https://build-nexus.alauda.cn/repository/golang/,direct'
-RUN PWGO_VER=$(grep -oE "playwright-go v\S+" /app/go.mod | sed 's/playwright-go //g') \
-    && go install github.com/playwright-community/playwright-go/cmd/playwright@${PWGO_VER}
-RUN set -eux; \
-    cd /app && \
-    CGO_ENABLED=0 go test -c -o /tools/bin/harbor.test ./
 
 FROM build-harbor.alauda.cn/ops/ubuntu:24.04
 
 RUN mkdir -p /tools/bin
 COPY --from=builder /tools/bin /tools/bin
-COPY --from=builder /go/bin/playwright /tools/bin/playwright
-
-# install playwright dependencies
-RUN apt-get update && apt-get install -y ca-certificates tzdata bash locales make git\
-    && /tools/bin/playwright install chromium --with-deps \
-    && rm -rf /var/lib/apt/lists/* \
-    && locale-gen en_US.UTF-8 \
-    && locale-gen zh_CN.UTF-8 \
-    && update-locale
-
 COPY . /app
 
 WORKDIR /app/testing
