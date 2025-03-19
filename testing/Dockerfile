@@ -1,12 +1,14 @@
-FROM docker-mirrors.alauda.cn/library/golang:1.23.3-bookworm AS builder
+FROM docker-mirrors.alauda.cn/library/golang:1.23-bookworm
 
-WORKDIR /tools
-RUN mkdir -p /tools/bin
+WORKDIR /app
 
-FROM build-harbor.alauda.cn/ops/ubuntu:24.04
+COPY . /app
 
-RUN mkdir -p /tools/bin
-COPY --from=builder /tools/bin /tools/bin
+ENV GOPROXY='https://build-nexus.alauda.cn/repository/golang/,direct'
+RUN set -eux; \
+    mkdir -p /tools/bin && chmod -R 777 /tools/bin; \
+    cd /app/testing && \
+    CGO_ENABLED=0 go test -c -o /tools/bin/nexus.test ./
 
 ARG YQ_VERSION=4.25.2
 ARG KUBECTL_VERSION=1.28.2
@@ -35,12 +37,6 @@ RUN set -eux; \
 
 
 COPY testing /app
-
-FROM build-harbor.alauda.cn/ops/ubuntu:24.04
-
-RUN mkdir -p /tools/bin
-COPY --from=builder /tools/bin /tools/bin
-COPY . /app
 
 RUN apt-get update && apt-get install -y ca-certificates tzdata bash locales make git\
     && rm -rf /var/lib/apt/lists/* \
