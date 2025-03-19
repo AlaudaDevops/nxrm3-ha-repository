@@ -24,6 +24,7 @@ RUN set -eux; \
     export ARCH_ALIAS="x86_64"; \
     fi; \
     mkdir -p /tools/bin && cd /tools; \
+    mkdir -p tmp; \
     curl -fsSLO https://download.docker.com/linux/static/stable/$(arch)/docker-${DOCKER_VERSION}.tgz && \
     tar xzvf docker-${DOCKER_VERSION}.tgz --strip 1 -C ./bin docker/docker && \
     curl -sfL https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_${ARCH} -o ./bin/yq && \
