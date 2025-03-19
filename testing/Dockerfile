@@ -8,12 +8,6 @@ FROM build-harbor.alauda.cn/ops/ubuntu:24.04
 RUN mkdir -p /tools/bin
 COPY --from=builder /tools/bin /tools/bin
 
-RUN apt-get update && apt-get install -y ca-certificates tzdata bash locales make git\
-    && rm -rf /var/lib/apt/lists/* \
-    && locale-gen en_US.UTF-8 \
-    && locale-gen zh_CN.UTF-8 \
-    && update-locale
-
 ARG YQ_VERSION=4.25.2
 ARG KUBECTL_VERSION=1.28.2
 ARG HELM_VERSION=3.12.3
@@ -47,6 +41,12 @@ FROM build-harbor.alauda.cn/ops/ubuntu:24.04
 RUN mkdir -p /tools/bin
 COPY --from=builder /tools/bin /tools/bin
 COPY . /app
+
+RUN apt-get update && apt-get install -y ca-certificates tzdata bash locales make git\
+    && rm -rf /var/lib/apt/lists/* \
+    && locale-gen en_US.UTF-8 \
+    && locale-gen zh_CN.UTF-8 \
+    && update-locale
 
 WORKDIR /app/testing
 ENV PATH=/tools/bin:$PATH
