@@ -1,14 +1,7 @@
-FROM docker-mirrors.alauda.cn/library/golang:1.23-bookworm
+FROM docker-mirrors.alauda.cn/library/golang:1.23.3-bookworm AS builder
 
-WORKDIR /app
-
-COPY . /app
-
-ENV GOPROXY='https://build-nexus.alauda.cn/repository/golang/,direct'
-RUN set -eux; \
-    mkdir -p /tools/bin && chmod -R 777 /tools/bin; \
-    cd /app/testing && \
-    CGO_ENABLED=0 go test -c -o /tools/bin/nexus.test ./
+WORKDIR /tools
+RUN mkdir -p /tools/bin
 
 ARG YQ_VERSION=4.25.2
 ARG KUBECTL_VERSION=1.28.2
@@ -23,7 +16,6 @@ RUN set -eux; \
     export ARCH="amd64"; \
     export ARCH_ALIAS="x86_64"; \
     fi; \
-    mkdir -p /tools/bin && cd /tools; \
     mkdir -p tmp; \
     curl -fsSLO https://download.docker.com/linux/static/stable/$(arch)/docker-${DOCKER_VERSION}.tgz && \
     tar xzvf docker-${DOCKER_VERSION}.tgz --strip 1 -C ./bin docker/docker && \
@@ -38,12 +30,25 @@ RUN set -eux; \
 
 
 COPY testing /app
+# 安装 playwright
+ENV GOPROXY='https://build-nexus.alauda.cn/repository/golang/,direct'
+RUN set -eux; \
+    cd /app && \
+    CGO_ENABLED=0 go test -c -o /tools/bin/nexus.test ./
 
+FROM build-harbor.alauda.cn/ops/ubuntu:24.04
+
+RUN mkdir -p /tools/bin
+COPY --from=builder /tools/bin /tools/bin
+
+# install playwright dependencies
 RUN apt-get update && apt-get install -y ca-certificates tzdata bash locales make git\
     && rm -rf /var/lib/apt/lists/* \
     && locale-gen en_US.UTF-8 \
     && locale-gen zh_CN.UTF-8 \
     && update-locale
+
+COPY . /app
 
 WORKDIR /app/testing
 ENV PATH=/tools/bin:$PATH
@@ -53,4 +58,4 @@ ENV LC_ALL=zh_CN.UTF-8
 ENV TEST_COMMAND="nexus.test"
 
 ENTRYPOINT ["nexus.test"]
-CMD ["--godog.concurrency=2", "--godog.format=allure", "--godog.tags=~@e2e"]
+CMD ["--godog.concurrency=2", "--godog.format=allure", "--godog.tags= ~@e2e"]
