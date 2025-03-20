@@ -5,7 +5,7 @@ go 1.23.3
 toolchain go1.23.6
 
 require (
-	github.com/AlaudaDevops/bdd v0.0.0-20250320022403-a930c8459923
+	github.com/AlaudaDevops/bdd v0.0.0-20250320072139-309e1371bc75
 	k8s.io/apimachinery v0.31.2
 	k8s.io/client-go v0.31.2
 )
