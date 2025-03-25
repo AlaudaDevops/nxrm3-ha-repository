@@ -24,6 +24,7 @@ func init() {
 
 func TestMain(m *testing.M) {
 	bdd.New().
+		WithSuiteName("Nexus").
 		WithOption(bdd.WithFeaturePaths("./features")).
 		WithExtensions(bdd.SharedClient(scheme)).
 		WithSteps(steps.BuiltinSteps...).

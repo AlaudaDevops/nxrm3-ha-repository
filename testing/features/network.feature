@@ -5,6 +5,7 @@
 
   @automated
   @priority-high
+  @nexus-chart-deploy-network-http
   @allure.label.case_id:nexus-chart-deploy-network-http
   场景: 使用 http 方式部署 nexus
     假定 集群已安装 ingress controller
@@ -30,6 +31,7 @@
 
   @automated
   @priority-high
+  @nexus-chart-deploy-network-https
   @allure.label.case_id:nexus-chart-deploy-network-https
   场景: 使用 https 方式部署 nexus
     假定 集群已安装 ingress controller
@@ -56,6 +58,7 @@
 
   @automated
   @priority-high
+  @nexus-chart-deploy-network-nodeport
   @allure.label.case_id:nexus-chart-deploy-network-nodeport
   场景: 使用 nodeport 方式部署 nexus
     假定 命名空间 "nexus-network-nodeport" 已存在
