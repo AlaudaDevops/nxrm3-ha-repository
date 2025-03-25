@@ -7,6 +7,7 @@
   @smoke
   @automated
   @priority-high
+  @nexus-chart-deploy-storage-sc
   @allure.label.case_id:nexus-chart-deploy-storage-sc
   场景: 使用存储类方式部署 nexus
     假定 集群已存在存储类
@@ -32,6 +33,7 @@
 
   @automated
   @priority-high
+  @nexus-chart-deploy-storage-hostpath
   @allure.label.case_id:nexus-chart-deploy-storage-hostpath
   场景: 使用 hostpath 方式部署 nexus
     假定 命名空间 "nexus-storage-hostpath" 已存在
@@ -56,6 +58,7 @@
 
   @automated
   @priority-high
+  @nexus-chart-deploy-storage-pvc
   @allure.label.case_id:nexus-chart-deploy-storage-pvc
   场景: 使用指定 pvc 的方式部署 nexus
     假定 命名空间 "nexus-storage-pvc" 已存在
