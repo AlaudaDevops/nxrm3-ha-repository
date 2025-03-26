@@ -85,3 +85,19 @@ Handles merging common service annotations with headless service annotations
 {{- $image := index .values.global.images .image -}}
 {{- printf "%s/%s:%s" .values.global.registry.address $image.repository $image.tag -}}
 {{- end -}}
+
+{{- define "nexus.runAsUser" -}}
+{{- if and .Values.nexus.securityContext .Values.nexus.securityContext.runAsUser -}}
+{{- .Values.nexus.securityContext.runAsUser | toString -}}
+{{- else -}}
+{{- printf "%d" 200 -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "nexus.runAsGroup" -}}
+{{- if and .Values.nexus.securityContext .Values.nexus.securityContext.runAsGroup -}}
+{{- .Values.nexus.securityContext.runAsGroup | toString -}}
+{{- else -}}
+{{- printf "%d" 200 -}}
+{{- end -}}
+{{- end -}}
