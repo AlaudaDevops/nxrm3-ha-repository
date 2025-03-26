@@ -12,9 +12,9 @@
     并且 已添加域名解析
       | domain                        | ip           |
       | test-ingress-http.example.com | <ingress-ip> |
-    并且 命名空间 "nexus-network-http" 已存在
+    并且 命名空间 "testing-nexus-network-http-<template.{{randAlphaNum 4 | toLower}}>" 已存在
     并且 已导入 "password" 资源: "./testdata/resources/secret-password.yaml"
-    当 使用 helm 部署实例到 "nexus-network-http" 命名空间
+    当 使用 helm 部署实例到 "testing-nexus-network-http-<template.{{randAlphaNum 4 | toLower}}>" 命名空间
       """
       chartPath: ../
       releaseName: nexus-http
@@ -38,10 +38,10 @@
     并且 已添加域名解析
       | domain                         | ip           |
       | test-ingress-https.example.com | <ingress-ip> |
-    并且 命名空间 "nexus-network-https" 已存在
+    并且 命名空间 "testing-nexus-network-https-<template.{{randAlphaNum 4 | toLower}}>" 已存在
     并且 已导入 "password" 资源: "./testdata/resources/secret-password.yaml"
     并且 已导入 "tls 证书" 资源: "./testdata/resources/secret-tls-cert.yaml"
-    当 使用 helm 部署实例到 "nexus-network-https" 命名空间
+    当 使用 helm 部署实例到 "testing-nexus-network-https-<template.{{randAlphaNum 4 | toLower}}>" 命名空间
       """
       chartPath: ../
       releaseName: nexus-https
@@ -61,9 +61,9 @@
   @nexus-chart-deploy-network-nodeport
   @allure.label.case_id:nexus-chart-deploy-network-nodeport
   场景: 使用 nodeport 方式部署 nexus
-    假定 命名空间 "nexus-network-nodeport" 已存在
+    假定 命名空间 "testing-nexus-network-nodeport-<template.{{randAlphaNum 4 | toLower}}>" 已存在
     并且 已导入 "password" 资源: "./testdata/resources/secret-password.yaml"
-    当 使用 helm 部署实例到 "nexus-network-nodeport" 命名空间
+    当 使用 helm 部署实例到 "testing-nexus-network-nodeport-<template.{{randAlphaNum 4 | toLower}}>" 命名空间
       """
       chartPath: ../
       releaseName: nexus-nodeport

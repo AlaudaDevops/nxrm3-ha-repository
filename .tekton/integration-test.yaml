@@ -1,7 +1,7 @@
 apiVersion: tekton.dev/v1beta1
 kind: PipelineRun
 metadata:
-  name: integration-test
+  name: nexus-integration-test
   annotations:
     pipelinesascode.tekton.dev/on-comment: "^((/test-all)|(/integration-test)|(/test-multi.*\ integration-test.*))"
     pipelinesascode.tekton.dev/on-cel-expression: |-
@@ -71,7 +71,7 @@ spec:
           export GOMAXPROCS=4
 
           echo "run integration tests..."
-          export REPORT=allure
+          export GODOG_ARGS="--godog.concurrency=1 --godog.format=allure"
           make test-all
     - name: vcluster
       value:

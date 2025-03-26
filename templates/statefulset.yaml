@@ -71,7 +71,7 @@ spec:
               touch -a /nexus-data/log/audit/audit.log &&
               touch -a /nexus-data/log/request.log &&
               cp /tmp/initial-password /nexus-data/admin.password &&
-              chown -R '200:200' /nexus-data
+              chown -R '{{ include "nexus.runAsUser" . }}:{{ include "nexus.runAsGroup" . }}' /nexus-data
           securityContext:
             runAsUser: 0
           volumeMounts:
@@ -98,7 +98,7 @@ spec:
             - -c
             - >-
               cp {{ .Values.plugins.path }}/*.jar /nexus-deploy/ &&
-              chown -R 200:200 /nexus-deploy/
+              chown -R '{{ include "nexus.runAsUser" . }}:{{ include "nexus.runAsGroup" . }}' /nexus-deploy/
           securityContext:
             runAsUser: 0
           volumeMounts:
@@ -135,8 +135,10 @@ spec:
         - name: nxrm-app
           image: {{ include "nexus.image" (dict "values" .Values "image" "nexus") }}
           imagePullPolicy: {{ .Values.statefulset.container.pullPolicy }}
+          {{ if .Values.nexus.securityContext }}
           securityContext:
             {{ toYaml .Values.nexus.securityContext | nindent 12 }}
+          {{ end }}
           lifecycle:
           {{- if .Values.statefulset.postStart.command }}
             postStart:
@@ -276,6 +278,10 @@ spec:
         - name: request-log
           image: {{ include "nexus.image" (dict "values" .Values "image" "busybox") }}
           args: [/bin/sh, -c, 'tail -n+1 -F /nexus-data/log/request.log']
+          {{ if .Values.nexus.securityContext }}
+          securityContext:
+            {{ toYaml .Values.nexus.securityContext | nindent 12 }}
+          {{ end }}
           volumeMounts:
             - name: nexus-data
               mountPath: /nexus-data
@@ -284,6 +290,10 @@ spec:
         - name: audit-log
           image: {{ include "nexus.image" (dict "values" .Values "image" "busybox") }}
           args: [/bin/sh, -c, 'tail -n+1 -F /nexus-data/log/audit/audit.log']
+          {{ if .Values.nexus.securityContext }}
+          securityContext:
+            {{ toYaml .Values.nexus.securityContext | nindent 12 }}
+          {{ end }}
           volumeMounts:
             - name: nexus-data
               mountPath: /nexus-data
@@ -293,6 +303,10 @@ spec:
         - name: tasks-log
           image: {{ include "nexus.image" (dict "values" .Values "image" "busybox") }}
           args: [/bin/sh, -c, 'tail -n+1 -F /nexus-data/log/tasks/allTasks.log']
+          {{ if .Values.nexus.securityContext }}
+          securityContext:
+            {{ toYaml .Values.nexus.securityContext | nindent 12 }}
+          {{ end }}
           volumeMounts:
             - name: nexus-data
               mountPath: /nexus-data

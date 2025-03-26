@@ -11,9 +11,9 @@
   @allure.label.case_id:nexus-chart-deploy-storage-sc
   场景: 使用存储类方式部署 nexus
     假定 集群已存在存储类
-    并且 命名空间 "nexus-storage-sc" 已存在
+    并且 命名空间 "testing-nexus-storage-sc-<template.{{randAlphaNum 4 | toLower}}>" 已存在
     并且 已导入 "password" 资源: "./testdata/resources/secret-password.yaml"
-    当 使用 helm 部署实例到 "nexus-storage-sc" 命名空间
+    当 使用 helm 部署实例到 "testing-nexus-storage-sc-<template.{{randAlphaNum 4 | toLower}}>" 命名空间
       """
       chartPath: ../
       releaseName: nexus-sc
@@ -36,9 +36,9 @@
   @nexus-chart-deploy-storage-hostpath
   @allure.label.case_id:nexus-chart-deploy-storage-hostpath
   场景: 使用 hostpath 方式部署 nexus
-    假定 命名空间 "nexus-storage-hostpath" 已存在
+    假定 命名空间 "testing-nexus-storage-hostpath-<template.{{randAlphaNum 4 | toLower}}>" 已存在
     并且 已导入 "password" 资源: "./testdata/resources/secret-password.yaml"
-    当 使用 helm 部署实例到 "nexus-storage-hostpath" 命名空间
+    当 使用 helm 部署实例到 "testing-nexus-storage-hostpath-<template.{{randAlphaNum 4 | toLower}}>" 命名空间
       """
       chartPath: ../
       releaseName: nexus-hostpath
@@ -61,10 +61,10 @@
   @nexus-chart-deploy-storage-pvc
   @allure.label.case_id:nexus-chart-deploy-storage-pvc
   场景: 使用指定 pvc 的方式部署 nexus
-    假定 命名空间 "nexus-storage-pvc" 已存在
+    假定 命名空间 "testing-nexus-storage-pvc-<template.{{randAlphaNum 4 | toLower}}>" 已存在
     并且 已导入 "password" 资源: "./testdata/resources/secret-password.yaml"
     并且 已导入 "pvc" 资源: "./testdata/resources/storage-pvc.yaml"
-    当 使用 helm 部署实例到 "nexus-storage-pvc" 命名空间
+    当 使用 helm 部署实例到 "testing-nexus-storage-pvc-<template.{{randAlphaNum 4 | toLower}}>" 命名空间
       """
       chartPath: ../
       releaseName: nexus-pvc
