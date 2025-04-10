@@ -36,23 +36,43 @@ RUN set -eux; \
     cd /app && \
     CGO_ENABLED=0 go test -c -o /tools/bin/nexus.test ./
 
-FROM build-harbor.alauda.cn/ops/ubuntu:24.04
+FROM docker-mirrors.alauda.cn/library/python:3.12-slim
 
 RUN mkdir -p /tools/bin
 COPY --from=builder /tools/bin /tools/bin
 
 # install playwright dependencies
-RUN apt-get update && apt-get install -y ca-certificates tzdata bash locales make git\
+RUN apt-get update && apt-get install -y ca-certificates tzdata bash locales make git \
+    wget \
+    curl \
+    gnupg2 \
+    software-properties-common \
+    maven \
+    nodejs \
+    npm \
+    openjdk-17-jdk \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
     && locale-gen en_US.UTF-8 \
     && locale-gen zh_CN.UTF-8 \
     && update-locale \
-    && chmod 755 /bin/sh 
+    && chmod 755 /bin/sh
+
+ARG ALLURE_VERSION=2.24.1
+RUN wget https://github.com/allure-framework/allure2/releases/download/${ALLURE_VERSION}/allure-${ALLURE_VERSION}.tgz \
+    && tar -zxvf allure-${ALLURE_VERSION}.tgz -C /opt/ \
+    && ln -s /opt/allure-${ALLURE_VERSION}/bin/allure /usr/local/bin/allure \
+    && rm allure-${ALLURE_VERSION}.tgz
 
 COPY . /app
+
 RUN chmod -R 755 /app
 
 WORKDIR /app/testing
+
+RUN pip install --no-cache-dir -r nexus-e2e/requirements.txt
+RUN pip install build setuptools
+
 ENV PATH=/tools/bin:$PATH
 ENV CI=true
 ENV LANG=zh_CN.UTF-8

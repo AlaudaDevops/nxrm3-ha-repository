@@ -4,6 +4,8 @@ import (
 	"os"
 	"testing"
 
+	customSteps "nexus/steps"
+
 	"github.com/AlaudaDevops/bdd"
 	"github.com/AlaudaDevops/bdd/steps"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -28,6 +30,7 @@ func TestMain(m *testing.M) {
 		WithOption(bdd.WithFeaturePaths("./features")).
 		WithExtensions(bdd.SharedClient(scheme)).
 		WithSteps(steps.BuiltinSteps...).
+		WithSteps(customSteps.Steps{}).
 		Run()
 
 	exitVal := m.Run()

@@ -25,7 +25,7 @@ test-all: create-testing-ns
 	$(TEST_COMMAND) $(GODOG_ARGS) --godog.tags="~@e2e"
 
 test-e2e: create-testing-ns
-	bash -x hack/run-e2e.sh $(E2E_CONFIG)
+	$(TEST_COMMAND) $(GODOG_ARGS) --godog.tags="@e2e"
 
 report:
 	allure generate --clean

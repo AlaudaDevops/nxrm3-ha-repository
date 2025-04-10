@@ -1,4 +1,4 @@
-hostPath: /data/nexus
+hostPath: /tmp/nexus-<template.{{randAlphaNum 10}}>
 
 statefulset:
   nodeSelector:

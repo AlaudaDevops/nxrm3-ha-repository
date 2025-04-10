@@ -24,7 +24,7 @@
       """
     并且 "nexus" 可以正常访问
       """
-      url: http://admin:Nexus12345@<node.first>:<nodeport.http>/service/rest/v1/status/check
+      url: http://admin:Nexus12345@<node.ip.random.readable>:<nodeport.http>/service/rest/v1/status/check
       timeout: 10m
       """
     并且 Pod 资源检查通过
@@ -54,7 +54,10 @@
       """
     并且 Pod 资源检查通过
       | name                       | path            | value        |
-      | nexus-hostpath-nxrm-ha-0   | $.status.hostIP | <node.ip.random.readable> |
+      | nexus-hostpath-nxrm-ha-0   | $.status.hostIP | <node.ip.random> |
+    并且 执行 "Nexus maven publish e2e" 脚本成功
+      | command |
+      | ./hack/run-e2e.sh http://<node.ip.random.readable>:<nodeport.http> admin Nexus12345 "test_maven_repo.py -k test_maven_publish" |
 
   @automated
   @priority-high
@@ -75,9 +78,12 @@
       """
     并且 "nexus" 可以正常访问
       """
-      url: http://admin:Nexus12345@<node.first>:<nodeport.http>/service/rest/v1/status/check
+      url: http://admin:Nexus12345@<node.ip.random.readable>:<nodeport.http>/service/rest/v1/status/check
       timeout: 10m
       """
     并且 Pod 资源检查通过
       | name                  | path                                                                         | value       |
       | nexus-pvc-nxrm-ha-0   | $.spec.volumes[?(@.name == 'nexus-data')][0].persistentVolumeClaim.claimName | nexus-pvc   |
+    并且 执行 "Nexus pypi e2e" 脚本成功
+      | command |
+      | ./hack/run-e2e.sh http://<node.ip.random.readable>:<nodeport.http> admin Nexus12345 test_pypi_repo.py |
