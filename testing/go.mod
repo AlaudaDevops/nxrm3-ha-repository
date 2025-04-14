@@ -5,7 +5,7 @@ go 1.23.3
 toolchain go1.23.6
 
 require (
-	github.com/AlaudaDevops/bdd v0.0.0-20250320072139-309e1371bc75
+	github.com/AlaudaDevops/bdd v0.0.0-20250409104818-4b7bd5894b28
 	github.com/cucumber/godog v0.15.0
 	go.uber.org/zap v1.27.0
 	k8s.io/apimachinery v0.31.2
@@ -161,3 +161,5 @@ require (
 	sigs.k8s.io/yaml v1.4.0 // indirect
 	yunion.io/x/pkg v0.0.0-20210218105412-13a69f60034c // indirect
 )
+
+replace github.com/godogx/allure => github.com/AlaudaDevops/allure v0.0.0-20250226133203-15725f53ca11

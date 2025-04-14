@@ -54,7 +54,7 @@
       """
     并且 Pod 资源检查通过
       | name                       | path            | value        |
-      | nexus-hostpath-nxrm-ha-0   | $.status.hostIP | <node.ip.random> |
+      | nexus-hostpath-nxrm-ha-0   | $.spec.nodeName | <node.name.random> |
     并且 执行 "Nexus maven publish e2e" 脚本成功
       | command |
       | ./hack/run-e2e.sh http://<node.ip.random.readable>:<nodeport.http> admin Nexus12345 "test_maven_repo.py -k test_maven_publish" |
