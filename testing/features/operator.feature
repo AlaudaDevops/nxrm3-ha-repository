@@ -20,5 +20,5 @@
     并且 "nexus-basic" 实例资源检查通过
     并且 执行 "Nexus e2e" 脚本成功
       | command |
-      | ./hack/run-e2e.sh http://<node.ip.random.readable>:<nodeport.http> admin Nexus12345 |
+      | ./hack/run-e2e.sh http://<node.ip.random.readable>:<nodeport.http> admin Nexus12345 <template.{{ ternary "\"test_maven_repo.py test_pypi_repo.py\"" "" (eq .acp.protocolStack "IPv6") }}> |
 
