@@ -22,6 +22,7 @@
       - testdata/snippets/base-values.yaml
       - testdata/snippets/values-storage-hostpath.yaml
       - testdata/snippets/values-network-ingress-http.yaml
+      - testdata/values-protocol-stack.yaml
       """
     并且 "nexus" 可以正常访问
       """

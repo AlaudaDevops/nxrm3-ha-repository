@@ -17,9 +17,17 @@ def test_maven_publish(nexus_client, nexus_config, hosted_repo):
             create_mirror_config("ucloud", "central", "http://ucloud-nexus.alauda.cn:8081", "maven-central")
         ]
         settings_path = create_settings(server_configs, mirrors_configs)
-        opt = f'-DaltDeploymentRepository=nexus::default::{nexus_config.url}/repository/{hosted_repo}'
-
-        assert os.system(f'cd {project_path} && mvn -s {settings_path} -f publish.xml {opt} clean deploy') == 0
+        publish_xml_path = project_path / 'publish.xml'
+        # Create a temporary directory to store the modified pom file
+        temp_publish_xml = f"publish-{time.strftime('%Y%m%d-%H%M%S')}.xml"
+        with open(publish_xml_path, 'r') as f:
+            content = f.read()
+        # Replace placeholder with actual nexus repository URL
+        content = content.replace('NEXUS_REPO_URL', f"{nexus_config.url}/repository/{hosted_repo}")
+        # Write the modified content to the temporary file
+        with open(project_path / temp_publish_xml, 'w') as f:
+            f.write(content)
+        assert os.system(f'cd {project_path} && mvn -s {settings_path} -f {temp_publish_xml} clean deploy') == 0
 
     with allure.step('Get snapshot version'):
         tree = ElementTree.parse(project_path / 'publish.xml')

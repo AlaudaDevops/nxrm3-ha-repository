@@ -7,6 +7,7 @@ ARG YQ_VERSION=4.25.2
 ARG KUBECTL_VERSION=1.28.2
 ARG HELM_VERSION=3.12.3
 ARG DOCKER_VERSION=26.0.2
+ARG MAVEN_VERSION=3.9.9
 
 RUN set -eux; \
     if [ "$(arch)" = "arm64" ] || [ "$(arch)" = "aarch64" ]; then \
@@ -16,17 +17,21 @@ RUN set -eux; \
     export ARCH="amd64"; \
     export ARCH_ALIAS="x86_64"; \
     fi; \
+    mkdir -p /tools/bin/maven; \
+    curl -fsSLO https://dlcdn.apache.org/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz; \
+    tar xzvf apache-maven-${MAVEN_VERSION}-bin.tar.gz  --strip 1 -C ./bin/maven; \
+    curl -fsSLO https://download.docker.com/linux/static/stable/$(arch)/docker-${DOCKER_VERSION}.tgz; \
+    tar xzvf docker-${DOCKER_VERSION}.tgz --strip 1 -C ./bin docker/docker; \
+    curl -sfL https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_${ARCH} -o ./bin/yq; \
+    curl -sfL https://dl.k8s.io/release/v${KUBECTL_VERSION}/bin/linux/${ARCH}/kubectl -o ./bin/kubectl; \
     mkdir -p tmp; \
-    curl -fsSLO https://download.docker.com/linux/static/stable/$(arch)/docker-${DOCKER_VERSION}.tgz && \
-    tar xzvf docker-${DOCKER_VERSION}.tgz --strip 1 -C ./bin docker/docker && \
-    curl -sfL https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_${ARCH} -o ./bin/yq && \
-    curl -sfL https://dl.k8s.io/release/v${KUBECTL_VERSION}/bin/linux/${ARCH}/kubectl -o ./bin/kubectl && \
-    curl -sfL https://get.helm.sh/helm-v${HELM_VERSION}-linux-${ARCH}.tar.gz | tar xzf - -C tmp 2>&1 && mv tmp/linux-${ARCH}/helm ./bin && \
-    chmod +x ./bin/* && \
-    rm -rf tmp && \
-    ./bin/yq --version && \
-    ./bin/kubectl version --client && \
+    curl -sfL https://get.helm.sh/helm-v${HELM_VERSION}-linux-${ARCH}.tar.gz | tar xzf - -C tmp 2>&1 && mv tmp/linux-${ARCH}/helm ./bin; \
+    chmod +x ./bin/*; \
+    rm -rf tmp; \
+    ./bin/yq --version; \
+    ./bin/kubectl version --client; \
     ./bin/helm version
+    
 
 
 COPY testing /app
@@ -47,7 +52,6 @@ RUN apt-get update && apt-get install -y ca-certificates tzdata bash locales mak
     curl \
     gnupg2 \
     software-properties-common \
-    maven \
     nodejs \
     npm \
     openjdk-17-jdk \
@@ -73,7 +77,7 @@ WORKDIR /app/testing
 RUN pip install --no-cache-dir -r nexus-e2e/requirements.txt
 RUN pip install build setuptools
 
-ENV PATH=/tools/bin:$PATH
+ENV PATH=/tools/bin:/tools/bin/maven/bin:$PATH
 ENV CI=true
 ENV LANG=zh_CN.UTF-8
 ENV LC_ALL=zh_CN.UTF-8

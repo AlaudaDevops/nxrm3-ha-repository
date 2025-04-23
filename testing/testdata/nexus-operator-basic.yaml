@@ -33,6 +33,7 @@ spec:
             memory: 8Gi
         env:
           zeroDowntimeEnabled: true
+          install4jAddVmParams: <template.{{ ternary "-Djava.net.preferIPv6Addresses=true -Xms2703m -Xmx2703m" "-Xms2703m -Xmx2703m" (eq .acp.protocolStack "IPv6") }}>
     storageClass:
       name: <storage-class>
     pvc:
@@ -43,3 +44,4 @@ spec:
       nexus:
         enabled: true
         nodePort: <nodeport.http>
+
