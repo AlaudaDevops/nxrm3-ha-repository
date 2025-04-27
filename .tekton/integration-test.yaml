@@ -8,40 +8,17 @@ metadata:
       target_branch.matches("^(main|release-.*|alauda-.*)$")
     pipelinesascode.tekton.dev/max-keep-runs: "5"
 spec:
+  taskRunTemplate:
+    podTemplate:
+      securityContext:
+        fsGroup: 65532
+        fsGroupChangePolicy: "OnRootMismatch"
   taskRunSpecs:
   - pipelineTaskName: run-test
     computeResources:
       limits:
         cpu: "4"
         memory: 4Gi
-  - pipelineTaskName: calculate-commit-sha
-    podTemplate:
-      securityContext:
-        runAsUser: 65532
-        runAsGroup: 65532
-        fsGroup: 65532
-        fsGroupChangePolicy: "OnRootMismatch"
-  - pipelineTaskName: build-test-image
-    podTemplate:
-      securityContext:
-        runAsUser: 65532
-        runAsGroup: 65532
-        fsGroup: 65532
-        fsGroupChangePolicy: "OnRootMismatch"
-  - pipelineTaskName: select-test-image
-    podTemplate:
-      securityContext:
-        runAsUser: 65532
-        runAsGroup: 65532
-        fsGroup: 65532
-        fsGroupChangePolicy: "OnRootMismatch"
-  - pipelineTaskName: commit-test-image
-    podTemplate:
-      securityContext:
-        runAsUser: 65532
-        runAsGroup: 65532
-        fsGroup: 65532
-        fsGroupChangePolicy: "OnRootMismatch"
   pipelineRef:
     resolver: hub
     params:
@@ -87,7 +64,7 @@ spec:
           yaml-file-path: ./values.yaml
         upstream-branch-condition: "^(main|master|release-.*|alauda-.*)$"
         upstream-secret: github-credentials
-        
+
     - name: vcluster
       value:
         custom-config: |
