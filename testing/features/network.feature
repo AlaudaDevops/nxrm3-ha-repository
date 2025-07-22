@@ -32,6 +32,9 @@
     并且 执行 "添加本地域名解析" 脚本成功
       | command |
       | ./hack/add-host.sh nexus-test-ingress-http.example.com <ingress-ip> |
+    并且 执行 "接受 EULA" 脚本成功
+      | command |
+      | ./hack/accepted-eula.sh http://nexus-test-ingress-http.example.com admin Nexus12345 |
     并且 执行 "Nexus maven e2e" 脚本成功
       | command |
       | ./hack/run-e2e.sh http://nexus-test-ingress-http.example.com admin Nexus12345 "test_maven_repo.py -k test_maven_proxy" |
@@ -65,6 +68,9 @@
     并且 执行 "添加本地域名解析" 脚本成功
       | command |
       | ./hack/add-host.sh nexus-test-ingress-https.example.com <ingress-ip> |
+    并且 执行 "接受 EULA" 脚本成功
+      | command |
+      | ./hack/accepted-eula.sh https://nexus-test-ingress-https.example.com admin Nexus12345 |
     并且 执行 "Nexus npm e2e" 脚本成功
       | command |
       | ./hack/run-e2e.sh https://nexus-test-ingress-https.example.com admin Nexus12345 test_npm_repo.py |

@@ -206,10 +206,7 @@ spec:
           -Dnexus.datastore.nexus.password=${DB_PASSWORD}"
           {{ else }} # default use h2 database
               value: "{{ .Values.statefulset.container.env.install4jAddVmParams }} \
-              -Dnexus.datastore.enabled=true -Djava.util.prefs.userRoot=${NEXUS_DATA}/javaprefs \
-              -Dnexus.datastore.nexus.jdbcUrl=jdbc:h2:/nexus-data/db  \
-              -Dnexus.datastore.nexus.username=${DB_USER} \
-              -Dnexus.datastore.nexus.password=${DB_PASSWORD}"
+              -Dnexus.datastore.enabled=true -Djava.util.prefs.userRoot=${NEXUS_DATA}/javaprefs"
           {{ end }}
           {{- if .Values.statefulset.container.additionalEnv }}
             {{ toYaml .Values.statefulset.container.additionalEnv | nindent 12 }}
