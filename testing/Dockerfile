@@ -7,7 +7,7 @@ ARG YQ_VERSION=4.25.2
 ARG KUBECTL_VERSION=1.28.2
 ARG HELM_VERSION=3.12.3
 ARG DOCKER_VERSION=26.0.2
-ARG MAVEN_VERSION=3.9.10
+ARG MAVEN_VERSION=3.9.11
 
 RUN set -eux; \
     if [ "$(arch)" = "arm64" ] || [ "$(arch)" = "aarch64" ]; then \
