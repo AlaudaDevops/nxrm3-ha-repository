@@ -36,9 +36,9 @@ RUN set -eux; \
 
 COPY testing /app
 # 安装 playwright
-ENV GOPROXY='https://build-nexus.alauda.cn/repository/golang/,direct'
 RUN set -eux; \
     cd /app && \
+    export GOPROXY='https://build-nexus.alauda.cn/repository/golang/,direct' && \
     CGO_ENABLED=0 go test -c -o /tools/bin/nexus.test ./
 
 FROM docker-mirrors.alauda.cn/library/python:3.12-slim
