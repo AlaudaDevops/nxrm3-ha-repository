@@ -20,7 +20,7 @@
       releaseName: nexus-http
       values:
       - testdata/snippets/base-values.yaml
-      - testdata/snippets/values-storage-hostpath.yaml
+      - testdata/snippets/values-storage-sc.yaml
       - testdata/snippets/values-network-ingress-http.yaml
       - testdata/values-protocol-stack.yaml
       """
@@ -54,7 +54,7 @@
       releaseName: nexus-https
       values:
       - testdata/snippets/base-values.yaml
-      - testdata/snippets/values-storage-hostpath.yaml
+      - testdata/snippets/values-storage-sc.yaml
       - testdata/snippets/values-network-ingress-https.yaml
       """
     并且 "nexus" 可以正常访问
@@ -82,7 +82,7 @@
       releaseName: nexus-nodeport
       values:
       - testdata/snippets/base-values.yaml
-      - testdata/snippets/values-storage-hostpath.yaml
+      - testdata/snippets/values-storage-sc.yaml
       - testdata/snippets/values-network-nodeport.yaml
       """
     并且 "nexus" 可以正常访问
