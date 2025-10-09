@@ -9,6 +9,22 @@ export NEXUS_PASSWORD=$3
 # Get current EULA status and disclaimer
 response=$(curl -s -k -u $NEXUS_USERNAME:$NEXUS_PASSWORD -X GET $NEXUS_URL/service/rest/v1/system/eula)
 
+# Retry if response is empty
+max_retries=10
+retry_count=0
+while [[ -z "$response" && $retry_count -lt $max_retries ]]; do
+  echo "Response is empty, waiting 5 seconds before retry $((retry_count + 1))/$max_retries..."
+  sleep 3
+  response=$(curl -s -k -u $NEXUS_USERNAME:$NEXUS_PASSWORD -X GET $NEXUS_URL/service/rest/v1/system/eula)
+  retry_count=$((retry_count + 1))
+done
+
+# Check if we still have empty response after retries
+if [[ -z "$response" ]]; then
+  echo "Error: Failed to get EULA response after $max_retries retries."
+  exit 1
+fi
+
 # Extract accepted status using jq
 accepted=$(echo "$response" | jq -r '.accepted')
 if [[ "$accepted" == "true" ]]; then

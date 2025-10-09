@@ -20,18 +20,18 @@
       releaseName: nexus-http
       values:
       - testdata/snippets/base-values.yaml
-      - testdata/snippets/values-storage-hostpath.yaml
+      - testdata/snippets/values-storage-sc.yaml
       - testdata/snippets/values-network-ingress-http.yaml
       - testdata/values-protocol-stack.yaml
       """
+    并且 执行 "添加本地域名解析" 脚本成功
+      | command |
+      | ./hack/add-host.sh nexus-test-ingress-http.example.com <ingress-ip> |
     并且 "nexus" 可以正常访问
       """
       url: http://admin:Nexus12345@nexus-test-ingress-http.example.com/service/rest/v1/status/check
       timeout: 10m
       """
-    并且 执行 "添加本地域名解析" 脚本成功
-      | command |
-      | ./hack/add-host.sh nexus-test-ingress-http.example.com <ingress-ip> |
     并且 执行 "接受 EULA" 脚本成功
       | command |
       | ./hack/accepted-eula.sh http://nexus-test-ingress-http.example.com admin Nexus12345 |
@@ -60,14 +60,14 @@
       - testdata/snippets/values-storage-sc.yaml
       - testdata/snippets/values-network-ingress-https.yaml
       """
+    并且 执行 "添加本地域名解析" 脚本成功
+      | command |
+      | ./hack/add-host.sh nexus-test-ingress-https.example.com <ingress-ip> |
     并且 "nexus" 可以正常访问
       """
       url: https://admin:Nexus12345@nexus-test-ingress-https.example.com/service/rest/v1/status/check
       timeout: 10m
       """
-    并且 执行 "添加本地域名解析" 脚本成功
-      | command |
-      | ./hack/add-host.sh nexus-test-ingress-https.example.com <ingress-ip> |
     并且 执行 "接受 EULA" 脚本成功
       | command |
       | ./hack/accepted-eula.sh https://nexus-test-ingress-https.example.com admin Nexus12345 |
