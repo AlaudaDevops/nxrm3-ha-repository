@@ -81,6 +81,7 @@ RUN chmod -R 755 /app
 
 WORKDIR /app/testing
 
+RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r nexus-e2e/requirements.txt
 RUN pip install build setuptools
 
