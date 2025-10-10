@@ -5,6 +5,10 @@ metadata:
 spec:
   externalURL: http://<node.ip.random.readable>:<nodeport.http>
   helmValues:
+    global:
+      labelBaseDomain: "cpaas.io"
+      registry:
+        address: <config.{{.registry.cluster | default "152-231-registry.alauda.cn:60070"}}>
     secret:
       nexusAdminSecret:
         enabled: true
@@ -44,4 +48,3 @@ spec:
       nexus:
         enabled: true
         nodePort: <nodeport.http>
-
